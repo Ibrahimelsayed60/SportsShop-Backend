@@ -1,18 +1,19 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SportsShop.API.ControllerParameter;
 
 namespace SportsShop.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseController
     {
-        private readonly IMediator _mediator;
+        private readonly ControllerParameters _controllerParameters;
 
-        public ProductsController(IMediator mediator)
+        public ProductsController(ControllerParameters controllerParameters ):base(controllerParameters) 
         {
-            _mediator = mediator;
+            _controllerParameters = controllerParameters;
         }
 
         //[HttpPost]
