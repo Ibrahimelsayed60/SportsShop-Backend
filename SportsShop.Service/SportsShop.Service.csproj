@@ -19,8 +19,4 @@
     <ProjectReference Include="..\SportsShop.Repository\SportsShop.Repository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CQRS\Products\Queries\" />
-  </ItemGroup>
-
 </Project>
