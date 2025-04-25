@@ -30,6 +30,20 @@ namespace SportsShop.API
                    .AsClosedTypesOf(typeof(IRequestHandler<,>))
                    .AsImplementedInterfaces();
 
+            // Register your handlers (assuming they are in the same assembly)
+            builder.RegisterAssemblyTypes(typeof(GetProductByIdQueryHandler).Assembly)
+                   .AsClosedTypesOf(typeof(IRequestHandler<,>))
+                   .AsImplementedInterfaces();
+
+            // Or register all types from the assembly where your CQRS handlers are located
+            builder.RegisterAssemblyTypes(typeof(GetProductByIdQuery).Assembly)
+                   .AsClosedTypesOf(typeof(IRequestHandler<,>))
+                   .AsImplementedInterfaces();
+
+
+
+
+
             builder.Register(context => new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<MappingProfiles>();

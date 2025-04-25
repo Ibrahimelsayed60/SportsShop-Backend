@@ -31,9 +31,11 @@ namespace SportsShop.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public Task<Product> GetProduct(int id)
+        public Task<ResultDto> GetProduct(int id)
         {
+            var resultDto = _mediator.Send(new GetProductByIdQuery(id));
 
+            return resultDto;
         }
 
         //[HttpPost]

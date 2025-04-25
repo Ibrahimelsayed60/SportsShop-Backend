@@ -15,6 +15,14 @@ namespace SportsShop.Service.CQRS.Products.Queries
 {
     public record GetAllProductsQuery(ProductSpecParams ProductSpecParams): IRequest<ResultDto>;
 
+    public class Pagination<T>(int pageIndex, int pageSize, int count, IEnumerable<T> data)
+    {
+        public int PageIndex { get; set; } = pageIndex;
+        public int PageSize { get; set; } = pageSize;
+        public int Count { get; set; } = count;
+        public IEnumerable<T> Data { get; set; } = data;
+    }
+
     public class GtAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, ResultDto>
     {
         private readonly IGenericRepository<Product> _productRepo;
@@ -29,9 +37,13 @@ namespace SportsShop.Service.CQRS.Products.Queries
 
             var products = await _productRepo.GetAllWithSpecAsync(spec);
 
+            var productsCount = await _productRepo.GetCountAsync(spec);
+
             var productsDtos = products.Map<ProductDto>();
 
-            return ResultDto.Sucess(productsDtos);
+            var paginatedData = new Pagination<ProductDto>(request.ProductSpecParams.PageIndex, request.ProductSpecParams.PageSize, productsCount, productsDtos);
+
+            return ResultDto.Sucess(paginatedData);
         }
     }
 
