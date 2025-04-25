@@ -8,7 +8,7 @@ namespace SportsShop.Core.Specifications.Products
 {
     public class ProductSpecParams:PaginationParams
     {
-
+        
         private List<string> _brands = [];
         public List<string> Brands
         {

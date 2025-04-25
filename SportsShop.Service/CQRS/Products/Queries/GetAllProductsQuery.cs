@@ -26,10 +26,12 @@ namespace SportsShop.Service.CQRS.Products.Queries
     public class GtAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, ResultDto>
     {
         private readonly IGenericRepository<Product> _productRepo;
+        private readonly IMediator _mediator;
 
-        public GtAllProductsQueryHandler(IGenericRepository<Product> productRepo)
+        public GtAllProductsQueryHandler(IGenericRepository<Product> productRepo, IMediator mediator)
         {
             _productRepo = productRepo;
+            _mediator = mediator;
         }
         public async Task<ResultDto> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
@@ -37,7 +39,7 @@ namespace SportsShop.Service.CQRS.Products.Queries
 
             var products = await _productRepo.GetAllWithSpecAsync(spec);
 
-            var productsCount = await _productRepo.GetCountAsync(spec);
+            var productsCount = await _mediator.Send(new GetProductsCountQuery(request.ProductSpecParams));
 
             var productsDtos = products.Map<ProductDto>();
 
