@@ -76,9 +76,13 @@ namespace SportsShop.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public Task DeleteProduct(int id)
+        public async Task<ResultDto> DeleteProduct(int id)
         {
+            bool isExist = productExists(id);
 
+            var result = await _mediator.Send(new DeleteProductCommand(id));
+
+            return result;
         }
 
         private  bool productExists(int id)

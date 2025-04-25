@@ -71,7 +71,7 @@ namespace SportsShop.Repository
 
         public bool Exists(int id)
         {
-            return _shopContext.Set<T>().Any(x => x.Id == id);
+            return _shopContext.Set<T>().Where(x => !x.IsDeleted).Any(x => x.Id == id);
         }
 
         public async Task SaveChangesAsync()
