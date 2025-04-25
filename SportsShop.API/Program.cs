@@ -49,8 +49,10 @@ namespace SportsShop.API
             #endregion
 
             #region Mapping
-            
+
             #endregion
+
+            builder.Services.AddCors();
 
             var app = builder.Build();
 
@@ -84,10 +86,14 @@ namespace SportsShop.API
 
             app.UseHttpsRedirection();
 
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+                .WithOrigins("http://localhost:4200", "https://localhost:4200"));
+
+            app.MapControllers();
+            
             app.UseAuthorization();
 
 
-            app.MapControllers();
 
             app.Run();
         }

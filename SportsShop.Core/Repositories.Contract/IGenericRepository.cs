@@ -21,6 +21,8 @@ namespace SportsShop.Core.Repositories.Contract
 
         Task<int> GetCountAsync(ISpecifications<T> spec);
 
+        Task<IEnumerable<TResult>> ListOptionalAsync<TResult>(ISpecifications<T, TResult> spec);
+
         Task<T> AddAsync(T entity);
 
         void Update(T entity);

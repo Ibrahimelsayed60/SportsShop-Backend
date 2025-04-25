@@ -9,7 +9,7 @@ using SportsShop.Service.CQRS.Products.Queries;
 
 namespace SportsShop.API.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : BaseController
     {
@@ -36,6 +36,21 @@ namespace SportsShop.API.Controllers
             var resultDto = _mediator.Send(new GetProductByIdQuery(id));
 
             return resultDto;
+        }
+
+        [HttpGet("types")]
+        public async Task<ResultDto> getTypes()
+        {
+            var data = await _mediator.Send(new GetTypesOfProductsQuery());
+            return data;
+        }
+
+        [HttpGet("brands")]
+        public Task<ResultDto> getBrands()
+        {
+            var data = _mediator.Send(new GetBrandsOfProductsQuery());
+
+            return data;
         }
 
         //[HttpPost]
