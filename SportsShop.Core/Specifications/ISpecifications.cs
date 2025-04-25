@@ -18,6 +18,8 @@ namespace SportsShop.Core.Specifications
 
         public Expression<Func<T, object>> OrderByDesc { get; set; }
 
+        List<string> IncludeStrings { get; } // For ThenInclude
+
         public bool IsDistinct { get; }
 
         public int Skip { get; set; }
@@ -26,5 +28,10 @@ namespace SportsShop.Core.Specifications
 
         public bool IsPaginationEnabled { get; set; }
 
+    }
+
+    public interface ISpecifications<T, TResult> : ISpecifications<T>
+    {
+        Expression<Func<T, TResult>>? Select { get; }
     }
 }

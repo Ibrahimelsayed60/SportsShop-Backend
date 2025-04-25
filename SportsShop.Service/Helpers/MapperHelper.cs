@@ -1,5 +1,6 @@
-﻿using Mapster;
-using MapsterMapper;
+﻿
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,12 @@ namespace SportsShop.Service.Helpers
 
         public static IEnumerable<TResult> Map<TResult>(this IQueryable source)
         {
-            return source.ProjectToType<TResult>();
+            return source.ProjectTo<TResult>(Mapper.ConfigurationProvider);
         }
 
         public static TResult Mapone<TResult>(this object source)
         {
-            return source.Adapt<TResult>();
+            return Mapper.Map<TResult>(source);
         }
 
 

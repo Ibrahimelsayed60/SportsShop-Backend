@@ -1,19 +1,21 @@
-﻿using Mapster;
+﻿using AutoMapper;
+using SportsShop.Core.Dtos.Products;
 using SportsShop.Core.Entities;
 using SportsShop.Service.CQRS.Products.Commands;
 
 namespace SportsShop.API.Helpers
 {
-    public static class MappingProfile
+    public class MappingProfiles:Profile
     {
-
-        public static void RegisterMappings()
+        public MappingProfiles()
         {
-
             #region Product
-            TypeAdapterConfig<ProductCreateDto, Product>.NewConfig(); 
+            CreateMap<Product, ProductDto>().ReverseMap();
+
+            CreateMap<Product, ProductCreateDto>().ReverseMap(); 
             #endregion
         }
+        
 
     }
 }

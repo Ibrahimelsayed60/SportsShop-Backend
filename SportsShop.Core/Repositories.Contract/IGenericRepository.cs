@@ -1,4 +1,5 @@
 ﻿using SportsShop.Core.Entities;
+using SportsShop.Core.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,21 @@ namespace SportsShop.Core.Repositories.Contract
 
         Task<IQueryable<T>> GetAllAsync();
 
-        Task<T> GetByIdAsync(int id);
+        Task<T?> GetByIdAsync(int id);
+
+        Task<IQueryable<T>> GetAllWithSpecAsync(ISpecifications<T> spec);
+
+        Task<T?> GetWithSpecAsync(ISpecifications<T> spec);
+
+        Task<int> GetCountAsync(ISpecifications<T> spec);
 
         Task<T> AddAsync(T entity);
 
         void Update(T entity);
 
         void Delete(T entity);
+
+        bool Exists(int id);
 
         Task SaveChangesAsync();
     }

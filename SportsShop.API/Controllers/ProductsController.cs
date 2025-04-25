@@ -2,6 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SportsShop.API.ControllerParameter;
+using SportsShop.Core.Dtos;
+using SportsShop.Core.Entities;
+using SportsShop.Core.Specifications.Products;
+using SportsShop.Service.CQRS.Products.Queries;
 
 namespace SportsShop.API.Controllers
 {
@@ -16,8 +20,44 @@ namespace SportsShop.API.Controllers
             _controllerParameters = controllerParameters;
         }
 
+        [HttpGet]
+        public async Task<ResultDto> GetProducts([FromQuery] ProductSpecParams productSpecParams)
+        {
+
+            var resultDto = await _mediator.Send(new GetAllProductsQuery(productSpecParams));
+
+            return resultDto;
+
+        }
+
+        [HttpGet("{id:int}")]
+        public Task<Product> GetProduct(int id)
+        {
+
+        }
+
         //[HttpPost]
-        //public 
+        //public Task<Product> CreateProduct(Product product)
+        //{
+
+        //}
+
+        //[HttpPut("{id:int}")]
+        //public Task UpdateProduct(int id, Product product)
+        //{
+
+        //}
+
+        //[HttpDelete("{id:int}")]
+        //public Task DeleteProduct(int id)
+        //{
+
+        //}
+
+        //private bool productExists(int id)
+        //{
+
+        //}
 
 
 

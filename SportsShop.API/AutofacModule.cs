@@ -1,8 +1,12 @@
 ﻿using Autofac;
+using AutoMapper;
+using MediatR;
 using SportsShop.API.ControllerParameter;
+using SportsShop.API.Helpers;
 using SportsShop.Core.Repositories.Contract;
 using SportsShop.Repository;
 using SportsShop.Repository.Data;
+using SportsShop.Service.CQRS.Products.Queries;
 
 namespace SportsShop.API
 {
@@ -13,6 +17,23 @@ namespace SportsShop.API
             builder.RegisterType<ShopContext>().InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(GenericRepository<>)).As(typeof(IGenericRepository<>)).InstancePerLifetimeScope();
             builder.RegisterType<ControllerParameters>().InstancePerLifetimeScope();
+
+            builder.RegisterAssemblyTypes(typeof(IMediator).Assembly).AsImplementedInterfaces();
+
+            // Register your handlers (assuming they are in the same assembly)
+            builder.RegisterAssemblyTypes(typeof(GtAllProductsQueryHandler).Assembly)
+                   .AsClosedTypesOf(typeof(IRequestHandler<,>))
+                   .AsImplementedInterfaces();
+
+            // Or register all types from the assembly where your CQRS handlers are located
+            builder.RegisterAssemblyTypes(typeof(GetAllProductsQuery).Assembly)
+                   .AsClosedTypesOf(typeof(IRequestHandler<,>))
+                   .AsImplementedInterfaces();
+
+            builder.Register(context => new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingProfiles>();
+            }).CreateMapper()).As<IMapper>().InstancePerLifetimeScope();
         }
     }
 }

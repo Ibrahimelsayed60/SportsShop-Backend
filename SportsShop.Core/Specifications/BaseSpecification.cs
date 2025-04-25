@@ -20,6 +20,8 @@ namespace SportsShop.Core.Specifications
         public int Take { get ; set; }
         public bool IsPaginationEnabled { get; set ; }
 
+        public List<string> IncludeStrings { get; set; } = new List<string>();
+
         public BaseSpecification()
         {
             
@@ -52,5 +54,17 @@ namespace SportsShop.Core.Specifications
             IsDistinct = true;
         }
 
+    }
+
+    public class BaseSpecification<T, TResult>(Expression<Func<T, bool>> criteria)
+    : BaseSpecification<T>(criteria), ISpecifications<T, TResult>
+    {
+        protected BaseSpecification() : this(null!) { }
+        public Expression<Func<T, TResult>>? Select { get; private set; }
+
+        protected void AddSelect(Expression<Func<T, TResult>> selectExpression)
+        {
+            Select = selectExpression;
+        }
     }
 }

@@ -4,13 +4,14 @@ using Autofac;
 using Microsoft.EntityFrameworkCore;
 using SportsShop.Repository.Data;
 using System.Diagnostics;
-using MapsterMapper;
+
 using SportsShop.Service.Helpers;
 using System.Reflection;
 using SportsShop.API.Helpers;
-using Mapster;
+
 using SportsShop.API.Middlewares;
 using Hangfire.States;
+using AutoMapper;
 
 namespace SportsShop.API
 {
@@ -48,12 +49,7 @@ namespace SportsShop.API
             #endregion
 
             #region Mapping
-            builder.Services.AddMapster();
-
-            MappingProfile.RegisterMappings();
-
-
-
+            
             #endregion
 
             var app = builder.Build();
