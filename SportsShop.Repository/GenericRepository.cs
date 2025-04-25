@@ -81,12 +81,12 @@ namespace SportsShop.Repository
 
         private IQueryable<T> ApplySpecification(ISpecifications<T> spec)
         {
-            return SpecificationsEvaluator<T>.GetQuery(_shopContext.Set<T>().AsQueryable(), spec);
+            return SpecificationsEvaluator<T>.GetQuery(_shopContext.Set<T>().Where(x => !x.IsDeleted).AsQueryable(), spec);
         }
 
         private IQueryable<TResult> ApplySpecification<TResult>(ISpecifications<T, TResult> spec)
         {
-            return SpecificationsEvaluator<T>.GetQuery<T, TResult>(_shopContext.Set<T>().AsQueryable(), spec);
+            return SpecificationsEvaluator<T>.GetQuery<T, TResult>(_shopContext.Set<T>().Where(x => !x.IsDeleted).AsQueryable(), spec);
         }
 
         

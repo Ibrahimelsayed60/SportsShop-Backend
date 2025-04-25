@@ -5,6 +5,7 @@ using SportsShop.API.ControllerParameter;
 using SportsShop.Core.Dtos;
 using SportsShop.Core.Entities;
 using SportsShop.Core.Specifications.Products;
+using SportsShop.Service.CQRS.Products.Commands;
 using SportsShop.Service.CQRS.Products.Queries;
 
 namespace SportsShop.API.Controllers
@@ -53,28 +54,37 @@ namespace SportsShop.API.Controllers
             return data;
         }
 
-        //[HttpPost]
-        //public Task<Product> CreateProduct(Product product)
-        //{
+        [HttpPost]
+        public async Task<ResultDto> CreateProduct(ProductCreateDto productCreateDto)
+        {
+            var result = await _mediator.Send(new AddProductCommand(productCreateDto));
 
-        //}
+            return result;
+        }
 
-        //[HttpPut("{id:int}")]
-        //public Task UpdateProduct(int id, Product product)
-        //{
+        [HttpPut("{id:int}")]
+        public async Task<ResultDto> UpdateProduct(int id, ProductCreateDto productCreateDto)
+        {
+            bool isExist = productExists(id);
 
-        //}
+            if (!isExist)
+            {
+                return ResultDto.Faliure("Product not found");
+            }
 
-        //[HttpDelete("{id:int}")]
-        //public Task DeleteProduct(int id)
-        //{
+            return await _mediator.Send(new UpdateProductCommand(id, productCreateDto));
+        }
 
-        //}
+        [HttpDelete("{id:int}")]
+        public Task DeleteProduct(int id)
+        {
 
-        //private bool productExists(int id)
-        //{
+        }
 
-        //}
+        private  bool productExists(int id)
+        {
+            return  _mediator.Send(new CheckProductExistQuery(id)).Result;
+        }
 
 
 
