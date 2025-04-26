@@ -55,11 +55,14 @@ namespace SportsShop.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ResultDto> CreateProduct(ProductCreateDto productCreateDto)
+        public async Task<IActionResult> CreateProduct(ProductCreateDto productCreateDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var result = await _mediator.Send(new AddProductCommand(productCreateDto));
 
-            return result;
+            return Ok(result);
         }
 
         [HttpPut("{id:int}")]

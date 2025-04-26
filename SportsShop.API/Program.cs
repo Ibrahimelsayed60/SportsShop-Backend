@@ -36,6 +36,10 @@ namespace SportsShop.API
                 .EnableSensitiveDataLogging();
             });
 
+            #region Fluent validation
+            //builder.Services.AddFluentVa(); // For auto model validation
+            //builder.Services.AddFluentValidationClientsideAdapters();
+            #endregion
 
             #region Autofac Registration
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -75,6 +79,7 @@ namespace SportsShop.API
 
 
             app.UseMiddleware<TransactionMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
 
 
             // Configure the HTTP request pipeline.

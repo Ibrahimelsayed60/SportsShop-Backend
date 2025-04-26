@@ -1,8 +1,10 @@
 ﻿using Autofac;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using SportsShop.API.ControllerParameter;
 using SportsShop.API.Helpers;
+using SportsShop.API.Validators;
 using SportsShop.Core.Repositories.Contract;
 using SportsShop.Repository;
 using SportsShop.Repository.Data;
@@ -48,6 +50,11 @@ namespace SportsShop.API
             {
                 cfg.AddProfile<MappingProfiles>();
             }).CreateMapper()).As<IMapper>().InstancePerLifetimeScope();
+
+
+            builder.RegisterAssemblyTypes(typeof(ProductCreateDtoValidators).Assembly)
+               .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
+               .AsImplementedInterfaces();
         }
     }
 }
