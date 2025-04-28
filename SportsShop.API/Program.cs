@@ -12,6 +12,7 @@ using SportsShop.API.Helpers;
 using SportsShop.API.Middlewares;
 using Hangfire.States;
 using AutoMapper;
+using StackExchange.Redis;
 
 namespace SportsShop.API
 {
@@ -35,6 +36,17 @@ namespace SportsShop.API
                 .LogTo(log => Debug.WriteLine(log), LogLevel.Information)
                 .EnableSensitiveDataLogging();
             });
+
+            #region Redis
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
+            {
+                var connection = builder.Configuration.GetConnectionString("Redis");
+                if (connection == null) throw new Exception("Can not get Redis connection string");
+                return ConnectionMultiplexer.Connect(connection);
+            });
+
+            #endregion
 
             #region Fluent validation
             //builder.Services.AddFluentVa(); // For auto model validation
