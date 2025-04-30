@@ -6,10 +6,12 @@ using SportsShop.API.ControllerParameter;
 using SportsShop.API.Helpers;
 using SportsShop.API.Validators;
 using SportsShop.Core.Repositories.Contract;
+using SportsShop.Core.Services.Contract;
 using SportsShop.Repository;
 using SportsShop.Repository.Data;
 using SportsShop.Service.CQRS.Products.Queries;
 using SportsShop.Service.CQRS.ShoppingCarts.Queries;
+using SportsShop.Service.Helpers;
 
 namespace SportsShop.API
 {
@@ -19,6 +21,7 @@ namespace SportsShop.API
         {
             builder.RegisterType<ShopContext>().InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(GenericRepository<>)).As(typeof(IGenericRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterType<AuthService>().As<IAuthService>().InstancePerLifetimeScope();
             builder.RegisterType<ShoppingCartRepository>().As<IShoppingCartRepository>().InstancePerLifetimeScope();
             builder.RegisterType<ControllerParameters>().InstancePerLifetimeScope();
 

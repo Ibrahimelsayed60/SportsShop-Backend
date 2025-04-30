@@ -14,6 +14,12 @@ using Hangfire.States;
 using AutoMapper;
 using StackExchange.Redis;
 using SportsShop.Core.Entities;
+using Autofac.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SportsShop.API
 {
@@ -66,12 +72,28 @@ namespace SportsShop.API
             #endregion
 
             builder.Services.AddAuthorization();
-            builder.Services.AddIdentityApiEndpoints<AppUser>()
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<ShopContext>();
 
-            #region Mapping
-
-            #endregion
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateAudience = true,
+                        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+                        ValidateIssuer = true,
+                        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"])),
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromDays(double.Parse(builder.Configuration["JWT:DurationInDays"]))
+                    };
+                });
 
             builder.Services.AddCors();
 
@@ -115,7 +137,6 @@ namespace SportsShop.API
 
             app.MapControllers();
 
-            app.MapIdentityApi<AppUser>();
 
             app.UseAuthorization();
 

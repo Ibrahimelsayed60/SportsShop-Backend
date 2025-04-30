@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using SportsShop.Core.Dtos.User;
+using SportsShop.Core.Services.Contract;
 using SportsShop.Service.CQRS.User.Commands;
 
 namespace SportsShop.API.Controllers
@@ -22,11 +24,31 @@ namespace SportsShop.API.Controllers
         {
             var result= await _mediator.Send(new RegisterUserCommand(registerDto));
 
-            if (!result.Data.Succeeded)
+            if (!result.IsSuccess)
             {
-                return BadRequest(result.Data.Errors);
+                return BadRequest();
             }
-            return Ok();
+            return Ok(result.Data);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult> Login(LoginDto loginDto)
+        {
+            var result= await _mediator.Send(new  LoginUserCommand(loginDto));
+            if (!result.IsSuccess)
+            {
+                return BadRequest();
+            }
+
+            Response.Cookies.Append("access_token", result.Data.Token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddHours(1)
+            });
+
+            return Ok(result.Data);
         }
 
     }
