@@ -13,6 +13,7 @@ using SportsShop.API.Middlewares;
 using Hangfire.States;
 using AutoMapper;
 using StackExchange.Redis;
+using SportsShop.Core.Entities;
 
 namespace SportsShop.API
 {
@@ -64,6 +65,10 @@ namespace SportsShop.API
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             #endregion
 
+            builder.Services.AddAuthorization();
+            builder.Services.AddIdentityApiEndpoints<AppUser>()
+                .AddEntityFrameworkStores<ShopContext>();
+
             #region Mapping
 
             #endregion
@@ -73,6 +78,8 @@ namespace SportsShop.API
             var app = builder.Build();
 
             MapperHelper.Mapper = app.Services.GetService<IMapper>();
+
+            
 
             try
             {
@@ -107,7 +114,9 @@ namespace SportsShop.API
                 .WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
             app.MapControllers();
-            
+
+            app.MapIdentityApi<AppUser>();
+
             app.UseAuthorization();
 
 

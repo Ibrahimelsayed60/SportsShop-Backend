@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SportsShop.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SportsShop.Repository.Data
 {
-    public class ShopContext :DbContext
+    public class ShopContext :IdentityDbContext<AppUser>
     {
 
         public ShopContext(DbContextOptions<ShopContext> options):base(options) 
