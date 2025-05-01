@@ -78,13 +78,15 @@ namespace SportsShop.API.Controllers
         {
             if(User.Identity?.IsAuthenticated == false) return NoContent();
 
-            var user = await _signInManager.UserManager.GetUserByEmail(User);
+            var user = await _signInManager.UserManager.GetUserByEmailWithAddress(User);
 
 
-            return Ok(new UserDto
+            return Ok(new 
             {
-                DisplayName = user.FirstName + " " + user.LastName,
-                Email = user.Email
+                user.FirstName,
+                user.LastName,
+                user.Email,
+                Address = user.Address?.ToDto()
             });
         }
 
@@ -92,6 +94,29 @@ namespace SportsShop.API.Controllers
         public ActionResult GetAuthState()
         {
             return Ok(new { IsAuthenticated = User.Identity?.IsAuthenticated ?? false });
+        }
+
+        [Authorize]
+        [HttpPost("address")]
+        public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDto addressDto)
+        {
+            var user = await _signInManager.UserManager.GetUserByEmailWithAddress(User);
+
+            if (user.Address == null)
+            {
+                user.Address = addressDto.ToEntity();
+            }
+            else
+            {
+                user.Address.UpdateFromDto(addressDto);
+            }
+
+            var result = await _signInManager.UserManager.UpdateAsync(user);
+
+            if (!result.Succeeded) return BadRequest("Problem updating user address");
+
+            return Ok(user.Address.ToDto());
+
         }
 
     }
