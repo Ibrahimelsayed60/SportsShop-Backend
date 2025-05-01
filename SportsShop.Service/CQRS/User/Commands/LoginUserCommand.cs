@@ -38,7 +38,8 @@ namespace SportsShop.Service.CQRS.User.Commands
 
             var userReturned = new UserDto
             {
-                DisplayName = user.FirstName + " " + user.LastName,
+                FirstName = user.FirstName,
+                LastName=user.LastName,
                 Email = user.Email,
                 Token = await _authService.CreateTokenAsync(user, _signInManager.UserManager)
             };

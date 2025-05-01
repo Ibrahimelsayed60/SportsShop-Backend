@@ -93,6 +93,20 @@ namespace SportsShop.API
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.FromDays(double.Parse(builder.Configuration["JWT:DurationInDays"]))
                     };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            // Read token from cookie instead of Authorization header
+                            var token = context.Request.Cookies["access_token"];
+                            if (!string.IsNullOrEmpty(token))
+                            {
+                                context.Token = token;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             builder.Services.AddCors();
@@ -137,7 +151,7 @@ namespace SportsShop.API
 
             app.MapControllers();
 
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

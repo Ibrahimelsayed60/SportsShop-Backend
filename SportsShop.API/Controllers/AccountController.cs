@@ -40,7 +40,12 @@ namespace SportsShop.API.Controllers
                 }
                 return ValidationProblem();
             }
-            return Ok(result.Data);
+            return Ok(new
+            {
+                FirstName = result.Data.FirstName,
+                LastName = result.Data.LastName,
+                Email = result.Data.Email,
+            });
         }
 
         [HttpPost("login")]
@@ -60,7 +65,13 @@ namespace SportsShop.API.Controllers
                 Expires = DateTimeOffset.UtcNow.AddHours(1)
             });
 
-            return Ok(result.Data);
+            return Ok(new
+            {
+                FirstName = result.Data.FirstName,
+                LastName = result.Data.LastName,
+                Email = result.Data.Email,
+                Token = result.Data.Token,
+            });
         }
 
         [Authorize]
@@ -90,7 +101,7 @@ namespace SportsShop.API.Controllers
             });
         }
 
-        [HttpGet]
+        [HttpGet("auth-status")]
         public ActionResult GetAuthState()
         {
             return Ok(new { IsAuthenticated = User.Identity?.IsAuthenticated ?? false });
