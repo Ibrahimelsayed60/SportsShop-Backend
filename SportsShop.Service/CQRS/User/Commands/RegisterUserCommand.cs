@@ -42,7 +42,7 @@ namespace SportsShop.Service.CQRS.User.Commands
 
             if (!result.Succeeded)
             {
-                return ResultDto.Faliure("Can not Sign up with this Email");
+                return ResultDto.Faliure(data: result.Errors);
             }
 
             var userDataReturned = new UserDto

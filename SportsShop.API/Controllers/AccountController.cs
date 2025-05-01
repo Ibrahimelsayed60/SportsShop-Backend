@@ -1,10 +1,16 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using SportsShop.API.Extensions;
 using SportsShop.Core.Dtos.User;
+using SportsShop.Core.Entities;
 using SportsShop.Core.Services.Contract;
 using SportsShop.Service.CQRS.User.Commands;
+using System.Security.Claims;
 
 namespace SportsShop.API.Controllers
 {
@@ -13,10 +19,12 @@ namespace SportsShop.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public AccountController(IMediator mediator)
+        public AccountController(IMediator mediator, SignInManager<AppUser> signInManager)
         {
             _mediator = mediator;
+            _signInManager = signInManager;
         }
 
         [HttpPost("register")]
@@ -26,7 +34,11 @@ namespace SportsShop.API.Controllers
 
             if (!result.IsSuccess)
             {
-                return BadRequest();
+                foreach (var error in result.Data)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
+                return ValidationProblem();
             }
             return Ok(result.Data);
         }
@@ -49,6 +61,37 @@ namespace SportsShop.API.Controllers
             });
 
             return Ok(result.Data);
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<ActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            Response.Cookies.Delete("access_token");
+            return NoContent();
+        }
+
+        
+        [HttpGet("user-info")]
+        public async Task<ActionResult> GetUserInfo()
+        {
+            if(User.Identity?.IsAuthenticated == false) return NoContent();
+
+            var user = await _signInManager.UserManager.GetUserByEmail(User);
+
+
+            return Ok(new UserDto
+            {
+                DisplayName = user.FirstName + " " + user.LastName,
+                Email = user.Email
+            });
+        }
+
+        [HttpGet]
+        public ActionResult GetAuthState()
+        {
+            return Ok(new { IsAuthenticated = User.Identity?.IsAuthenticated ?? false });
         }
 
     }

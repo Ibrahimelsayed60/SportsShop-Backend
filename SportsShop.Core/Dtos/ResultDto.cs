@@ -23,12 +23,12 @@ namespace SportsShop.Core.Dtos
             };
         }
 
-        public static ResultDto Faliure(string message = "Invalid Operation")
+        public static ResultDto Faliure(string message = "Invalid Operation", dynamic? data=null)
         {
             return new ResultDto
             {
                 IsSuccess = false,
-                Data = default,
+                Data = data is not null? data: default,
                 Message = message,
             };
         }
