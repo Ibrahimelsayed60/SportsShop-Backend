@@ -28,6 +28,20 @@ namespace SportsShop.Repository.Data
 
                 await shopContext.SaveChangesAsync();
             }
+
+            if (!shopContext.DeliveryMethods.Any())
+            {
+                var deliveryData = await File.ReadAllTextAsync("../SportsShop.Repository/Data/SeedData/delivery.json");
+
+                var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryData);
+
+                if (deliveryMethods == null) return;
+
+                shopContext.DeliveryMethods.AddRange(deliveryMethods);
+
+                await shopContext.SaveChangesAsync();
+            }
+
         }
 
     }

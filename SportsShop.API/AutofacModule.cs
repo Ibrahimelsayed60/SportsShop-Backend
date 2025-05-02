@@ -9,6 +9,7 @@ using SportsShop.Core.Repositories.Contract;
 using SportsShop.Core.Services.Contract;
 using SportsShop.Repository;
 using SportsShop.Repository.Data;
+using SportsShop.Service.CQRS.Payment.Commands;
 using SportsShop.Service.CQRS.Products.Queries;
 using SportsShop.Service.CQRS.ShoppingCarts.Queries;
 using SportsShop.Service.Helpers;
@@ -50,6 +51,10 @@ namespace SportsShop.API
             builder.RegisterAssemblyTypes(typeof(GetShoppingCartQuery).Assembly)
                    .AsClosedTypesOf(typeof(IRequestHandler<,>))
                    .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(typeof(CreateOrUpdatePaymentIntentCommand).Assembly)
+                .AsClosedTypesOf(typeof (IRequestHandler<,>))
+                .AsImplementedInterfaces();
 
 
 
