@@ -54,6 +54,16 @@ namespace SportsShop.Core.Specifications
             IsDistinct = true;
         }
 
+        protected void AddInclude(Expression<Func<T, object>> includeExpressions)
+        {
+            Includes.Add(includeExpressions);
+        }
+
+        protected void AddInclude(string includeString)
+        {
+            IncludeStrings.Add(includeString); // For ThenInclude
+        }
+
     }
 
     public class BaseSpecification<T, TResult>(Expression<Func<T, bool>> criteria)

@@ -67,6 +67,10 @@ namespace SportsShop.API
             builder.RegisterAssemblyTypes(typeof(ProductCreateDtoValidators).Assembly)
                .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(typeof(CreateOrderDtoValidators).Assembly)
+                .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
+               .AsImplementedInterfaces();
         }
     }
 }

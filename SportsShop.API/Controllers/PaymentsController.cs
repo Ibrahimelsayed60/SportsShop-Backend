@@ -17,7 +17,7 @@ namespace SportsShop.API.Controllers
     {
         private readonly IMediator _mediator;
 
-        public PaymentsController(IMediator mediator, IGenericRepository<DeliveryMethod> deliveryRepo)
+        public PaymentsController(IMediator mediator)
         {
             _mediator = mediator;
         }

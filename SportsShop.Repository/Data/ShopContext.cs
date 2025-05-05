@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SportsShop.Core.Entities;
+using SportsShop.Core.Entities.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,10 @@ namespace SportsShop.Repository.Data
         public DbSet<Address> Addresses { get; set; }
 
         public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderItem> OrderItems { get; set; }
 
     }
 }

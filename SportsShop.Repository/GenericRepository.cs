@@ -18,6 +18,7 @@ namespace SportsShop.Repository
         public GenericRepository(ShopContext shopContext)
         {
             _shopContext = shopContext;
+            Console.WriteLine("hash code of context: "+ shopContext.GetHashCode());
         }
 
         public async Task<IQueryable<T>> GetAllAsync()
@@ -28,7 +29,7 @@ namespace SportsShop.Repository
         public async Task<T?> GetByIdAsync(int id)
         {
             var data = await GetAllAsync();
-            return await data.FirstOrDefaultAsync(x => x.Id == id);
+            return await data.AsTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IQueryable<T>> GetAllWithSpecAsync(ISpecifications<T> spec)
