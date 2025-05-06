@@ -47,7 +47,7 @@ namespace SportsShop.API.Controllers
         {
             var spec = new OrderSpecification(User.GetEmail(), id);
 
-            var order = await _mediator.Send(new GetOrdersForUserQuery(spec));
+            var order = await _mediator.Send(new GetOrdersForUserByIdQuery(spec));
 
             if(order.Data == null)
                 return NotFound();
