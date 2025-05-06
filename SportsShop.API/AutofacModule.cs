@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using SportsShop.API.ControllerParameter;
+using SportsShop.API.Extensions;
 using SportsShop.API.Helpers;
 using SportsShop.API.Validators;
 using SportsShop.Core.Repositories.Contract;

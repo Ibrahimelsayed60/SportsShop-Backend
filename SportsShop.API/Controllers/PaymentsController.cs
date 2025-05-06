@@ -84,20 +84,6 @@ namespace SportsShop.API.Controllers
 
                 BackgroundJob.Enqueue(() => _paymentHandle.HandlePaymentIntentSucceeded(intent));
 
-                var spec = new OrderSpecification(intent.Id, true);
-
-                var order = await _orderRepo.GetWithSpecAsync(spec)
-                    ?? throw new Exception("Order not found");
-
-                var connectionId = NotificationHub.GetConnectionIdByEmail(User.GetEmail());
-
-                if (!string.IsNullOrEmpty(connectionId))
-                {
-                    await _hubContext.Clients.Client(connectionId)
-                        .SendAsync("OrderCompleteNotification", order.ToDto());
-                }
-
-                //await HandlePaymentIntentSucceeded(intent);
 
                 return Ok();
             }

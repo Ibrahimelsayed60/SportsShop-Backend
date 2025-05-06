@@ -1,30 +1,28 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.SignalR;
+using SportsShop.API.SignalR;
 using SportsShop.Core.Entities.Order;
 using SportsShop.Core.Repositories.Contract;
 using SportsShop.Core.Services.Contract;
 using SportsShop.Core.Specifications.Orders;
+using SportsShop.Service.Helpers;
 using Stripe;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SportsShop.Service.Helpers
+namespace SportsShop.API.Extensions
 {
-    public class PaymentHandle:IPaymentHandle
+    public class PaymentHandle : IPaymentHandle
     {
         private readonly ILogger<PaymentHandle> _logger;
         private readonly IGenericRepository<Order> _orderRepo;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public PaymentHandle(ILogger<PaymentHandle> logger, IGenericRepository<Order> orderRepo)
+        public PaymentHandle(ILogger<PaymentHandle> logger, IGenericRepository<Order> orderRepo, IHubContext<NotificationHub> hubContext)
         {
             _logger = logger;
             _orderRepo = orderRepo;
+            _hubContext = hubContext;
         }
 
-        public Event ConstructStripeEvent(HttpRequest Request,string json, string _whSecret)
+        public Event ConstructStripeEvent(HttpRequest Request, string json, string _whSecret)
         {
             try
             {
@@ -58,7 +56,13 @@ namespace SportsShop.Service.Helpers
                 await _orderRepo.SaveChangesAsync();
 
                 // TODO: SignalR
+                var connectionId = NotificationHub.GetConnectionIdByEmail(order.BuyerEmail);
 
+                if (!string.IsNullOrEmpty(connectionId))
+                {
+                    await _hubContext.Clients.Client(connectionId)
+                        .SendAsync("OrderCompleteNotification", order.ToDto());
+                }
             }
         }
 
