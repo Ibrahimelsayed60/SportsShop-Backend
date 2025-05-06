@@ -39,7 +39,7 @@ namespace SportsShop.Repository
 
         public async Task<T?> GetWithSpecAsync(ISpecifications<T> spec)
         {
-            return await ApplySpecification(spec).FirstOrDefaultAsync();
+            return await ApplySpecification(spec).AsTracking().FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<TResult>> ListOptionalAsync<TResult>(ISpecifications<T, TResult> spec)

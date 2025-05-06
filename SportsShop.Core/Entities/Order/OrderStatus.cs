@@ -16,6 +16,8 @@ namespace SportsShop.Core.Entities.Order
         PaymentReceived,
 
         [EnumMember(Value = "Payment Failed")]
-        PaymentFailed
+        PaymentFailed,
+
+        PaymentMismatch
     }
 }

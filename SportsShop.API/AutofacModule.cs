@@ -25,6 +25,7 @@ namespace SportsShop.API
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerLifetimeScope();
             builder.RegisterType<ShoppingCartRepository>().As<IShoppingCartRepository>().InstancePerLifetimeScope();
             builder.RegisterType<ControllerParameters>().InstancePerLifetimeScope();
+            builder.RegisterType<PaymentHandle>().As<IPaymentHandle>().InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(typeof(IMediator).Assembly).AsImplementedInterfaces();
 

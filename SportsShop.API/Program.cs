@@ -20,6 +20,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Hangfire;
+using SportsShop.API.SignalR;
 
 namespace SportsShop.API
 {
@@ -69,6 +71,19 @@ namespace SportsShop.API
 
             #region MediatR Configuration
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            #endregion
+
+            #region Configure Background service - Hangfire
+            builder.Services.AddHangfire(config =>
+            {
+                config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+            builder.Services.AddHangfireServer();
+
+            #endregion
+
+            #region SignalR
+            builder.Services.AddSignalR();
             #endregion
 
             builder.Services.AddAuthorization();
@@ -154,7 +169,7 @@ namespace SportsShop.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-
+            app.MapHub<NotificationHub>("/hub/notifications");
 
             app.Run();
         }

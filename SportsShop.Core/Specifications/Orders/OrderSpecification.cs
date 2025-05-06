@@ -22,5 +22,12 @@ namespace SportsShop.Core.Specifications.Orders
             AddInclude("DeliveryMethod");
         }
 
+        public OrderSpecification(string paymentIntentId, bool isPaymentIntent) : base(x => x.PaymentIntentId == paymentIntentId)
+        {
+            {
+                AddInclude("OrderItems");
+                AddInclude("DeliveryMethod");
+            }
+        }
     }
 }
